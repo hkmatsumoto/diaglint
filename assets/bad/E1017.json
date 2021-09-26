@@ -1,0 +1,94 @@
+{
+    "rendered": "error[E0107]: this associated function takes 0 generic arguments but 1 generic argument was supplied\n   --> src/lib.rs:2:31\n    |\n2   |     let _ = \"foo\".to_string().into::<Option<_>>();\n    |                               ^^^^------------- help: remove these generics\n    |                               |\n    |                               expected 0 generic arguments\n    |\nnote: associated function defined here, with 0 generic parameters\n   --> /xxx/mod.rs:277:8\n    |\n277 |     fn into(self) -> T;\n    |        ^^^^\n\n",
+    "children": [
+        {
+            "children": [],
+            "code": null,
+            "level": "note",
+            "message": "associated function defined here, with 0 generic parameters",
+            "rendered": null,
+            "spans": [
+                {
+                    "byte_end": 10043,
+                    "byte_start": 10039,
+                    "column_end": 12,
+                    "column_start": 8,
+                    "expansion": null,
+                    "file_name": "/xxx/mod.rs",
+                    "is_primary": true,
+                    "label": null,
+                    "line_end": 277,
+                    "line_start": 277,
+                    "suggested_replacement": null,
+                    "suggestion_applicability": null,
+                    "text": [
+                        {
+                            "highlight_end": 12,
+                            "highlight_start": 8,
+                            "text": "    fn into(self) -> T;"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "children": [],
+            "code": null,
+            "level": "help",
+            "message": "remove these generics",
+            "rendered": null,
+            "spans": [
+                {
+                    "byte_end": 62,
+                    "byte_start": 49,
+                    "column_end": 48,
+                    "column_start": 35,
+                    "expansion": null,
+                    "file_name": "src/lib.rs",
+                    "is_primary": true,
+                    "label": null,
+                    "line_end": 2,
+                    "line_start": 2,
+                    "suggested_replacement": "",
+                    "suggestion_applicability": "MaybeIncorrect",
+                    "text": [
+                        {
+                            "highlight_end": 48,
+                            "highlight_start": 35,
+                            "text": "    let _ = \"foo\".to_string().into::<Option<_>>();"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "code": {
+        "code": "E0107",
+        "explanation": "An incorrect number of generic arguments was provided.\n\nErroneous code example:\n\n```compile_fail,E0107\nstruct Foo<T> { x: T }\n\nstruct Bar { x: Foo }             // error: wrong number of type arguments:\n                                  //        expected 1, found 0\nstruct Baz<S, T> { x: Foo<S, T> } // error: wrong number of type arguments:\n                                  //        expected 1, found 2\n\nfn foo<T, U>(x: T, y: U) {}\nfn f() {}\n\nfn main() {\n    let x: bool = true;\n    foo::<bool>(x);                 // error: wrong number of type arguments:\n                                    //        expected 2, found 1\n    foo::<bool, i32, i32>(x, 2, 4); // error: wrong number of type arguments:\n                                    //        expected 2, found 3\n    f::<'static>();                 // error: wrong number of lifetime arguments\n                                    //        expected 0, found 1\n}\n```\n\nWhen using/declaring an item with generic arguments, you must provide the exact\nsame number:\n\n```\nstruct Foo<T> { x: T }\n\nstruct Bar<T> { x: Foo<T> }               // ok!\nstruct Baz<S, T> { x: Foo<S>, y: Foo<T> } // ok!\n\nfn foo<T, U>(x: T, y: U) {}\nfn f() {}\n\nfn main() {\n    let x: bool = true;\n    foo::<bool, u32>(x, 12);              // ok!\n    f();                                  // ok!\n}\n```\n"
+    },
+    "level": "error",
+    "message": "This associated function takes 0 generic arguments but 1 generic argument was supplied, which is illegal.",
+    "spans": [
+        {
+            "byte_end": 49,
+            "byte_start": 45,
+            "column_end": 35,
+            "column_start": 31,
+            "expansion": null,
+            "file_name": "src/lib.rs",
+            "is_primary": true,
+            "label": "expected 0 generic arguments",
+            "line_end": 2,
+            "line_start": 2,
+            "suggested_replacement": null,
+            "suggestion_applicability": null,
+            "text": [
+                {
+                    "highlight_end": 35,
+                    "highlight_start": 31,
+                    "text": "    let _ = \"foo\".to_string().into::<Option<_>>();"
+                }
+            ]
+        }
+    ]
+}
