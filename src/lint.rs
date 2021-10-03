@@ -23,6 +23,11 @@ impl<'a> LintRunner {
         self
     }
 
+    pub fn unregister_rules(&'a mut self, rules: Vec<String>) -> &'a mut LintRunner {
+        self.rule_store.unregister_rules(rules);
+        self
+    }
+
     pub fn run(&self, diag: &'_ str) -> Vec<String> {
         let mut ctx = LintCtx::default();
 

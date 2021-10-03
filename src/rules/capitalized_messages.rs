@@ -7,7 +7,7 @@ pub(crate) struct CapitalizedMessages {}
 
 impl super::Rule for CapitalizedMessages {
     fn name(&self) -> &'static str {
-        "capitalized messages"
+        "capitalized-messages"
     }
 
     fn check(&self, diag: &crate::json::Diagnostic, ctx: &mut crate::lint::LintCtx) {

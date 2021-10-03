@@ -18,6 +18,11 @@ impl RuleStore {
     pub fn register_default_rules(&mut self) {
         self.rules.append(&mut default_rules())
     }
+
+    pub fn unregister_rules(&mut self, rules: Vec<String>) {
+        self.rules
+            .retain(|rule| !rules.contains(&rule.name().to_owned()));
+    }
 }
 
 fn default_rules() -> Vec<Box<dyn Rule>> {

@@ -4,13 +4,13 @@ use codespan_reporting::{
 };
 use nom::Finish;
 
-use crate::parse::{Element, parse_message};
+use crate::parse::{parse_message, Element};
 
 pub(crate) struct PunctuatedEndings {}
 
 impl super::Rule for PunctuatedEndings {
     fn name(&self) -> &'static str {
-        "punctuated endings"
+        "punctuated-endings"
     }
 
     fn check(&self, diag: &crate::json::Diagnostic, ctx: &mut crate::lint::LintCtx) {
