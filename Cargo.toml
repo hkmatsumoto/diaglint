@@ -1,6 +1,6 @@
 [package]
 name = "diaglint"
-version = "0.1.6"
+version = "0.1.7"
 authors = ["Hirochika Matsumoto <git@hkmatsumoto.com>"]
 description = "A linter for Rust diagnostics"
 edition = "2018"
