@@ -10,7 +10,7 @@ license = "MIT OR Apache-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-annotate-snippets = "0.9"
+annotate-snippets = "0.8"
 nom = "7.0"
 nom_locate = "4.0"
 serde = { version = "1.0", features = ["derive"] }
