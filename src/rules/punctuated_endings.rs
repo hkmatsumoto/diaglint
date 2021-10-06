@@ -1,7 +1,5 @@
-use codespan_reporting::{
-    diagnostic::{Diagnostic, Label},
-    files::SimpleFile,
-};
+use annotate_snippets::snippet::{Annotation, AnnotationType, Slice, Snippet, SourceAnnotation};
+
 use nom::Finish;
 
 use crate::parse::{parse_message, Element};
@@ -23,19 +21,30 @@ impl super::Rule for PunctuatedEndings {
             if let Some(last) = sentence.last() {
                 if matches!(last.inner(), Element::Period) {
                     let offset = last.span().location_offset();
+                    let (lo, hi) = (offset, offset + 1);
 
-                    let file = SimpleFile::new("<diagnostic>".to_owned(), diag.message.clone());
-                    let diag = Diagnostic::warning()
-                        .with_message("diagnostic messages should not end with punctuations")
-                        .with_labels(vec![
-                            Label::primary((), offset..offset+1).with_message("this is a punctuation")
-                        ])
-                        .with_notes(
-                            vec![
-                                "for more information, see <https://rustc-dev-guide.rust-lang.org/diagnostics.html#diagnostic-output-style-guide>".to_owned()
-                            ]
-                        );
-                    ctx.emit(&file, diag);
+                    let snip = Snippet {
+                        title: Some(Annotation {
+                            id: None,
+                            label: Some("diagnostic messages should not end with punctuations"),
+                            annotation_type: AnnotationType::Warning,
+                        }),
+                        footer: vec![],
+                        slices: vec![Slice {
+                            source: diag.message.as_str(),
+                            line_start: 1,
+                            origin: None,
+                            fold: false,
+                            annotations: vec![SourceAnnotation {
+                                label: "this is a punctuation",
+                                range: (lo, hi),
+                                annotation_type: AnnotationType::Warning,
+                            }],
+                        }],
+                        ..Default::default()
+                    };
+
+                    ctx.emit(snip);
                 }
             }
         }

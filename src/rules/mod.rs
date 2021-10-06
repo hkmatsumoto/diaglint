@@ -19,7 +19,7 @@ impl RuleStore {
         self.rules.append(&mut default_rules())
     }
 
-    pub fn unregister_rules(&mut self, rules: &Vec<String>) {
+    pub fn unregister_rules(&mut self, rules: &[String]) {
         self.rules
             .retain(|rule| !rules.contains(&rule.name().to_owned()));
     }

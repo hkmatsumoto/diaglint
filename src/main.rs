@@ -5,5 +5,5 @@ fn main() {
         .register_default_rules()
         .run(include_str!("../assets/bad/E1017.json"))
         .iter()
-        .for_each(|output| println!("{}", output));
+        .for_each(|output| println!("{}\n", output));
 }

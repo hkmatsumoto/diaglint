@@ -1,7 +1,4 @@
-use codespan_reporting::{
-    diagnostic::{Diagnostic, Label},
-    files::SimpleFile,
-};
+use annotate_snippets::snippet::{Annotation, AnnotationType, Slice, Snippet, SourceAnnotation};
 
 pub(crate) struct CapitalizedMessages {}
 
@@ -12,16 +9,28 @@ impl super::Rule for CapitalizedMessages {
 
     fn check(&self, diag: &crate::json::Diagnostic, ctx: &mut crate::lint::LintCtx) {
         if diag.message.starts_with(|c: char| c.is_ascii_uppercase()) {
-            let file = SimpleFile::new("<diagnostic>".to_owned(), diag.message.clone());
-            let diag = Diagnostic::warning()
-                .with_message("diagnostic messages should start with lowercase letters")
-                .with_labels(vec![
-                    Label::primary((), 0..1).with_message("this is an uppercase letter")
-                ]).with_notes(vec![
-                    "for more information, see <https://rustc-dev-guide.rust-lang.org/diagnostics.html#diagnostic-output-style-guide>".to_owned()
-                ]);
+            let snip = Snippet {
+                title: Some(Annotation {
+                    label: Some("diagnostic messages should start with lowercase letters"),
+                    id: None,
+                    annotation_type: AnnotationType::Warning,
+                }),
+                footer: vec![],
+                slices: vec![Slice {
+                    source: diag.message.as_str(),
+                    line_start: 1,
+                    origin: None,
+                    fold: false,
+                    annotations: vec![SourceAnnotation {
+                        label: "this is an uppercase letter",
+                        range: (0, 1),
+                        annotation_type: AnnotationType::Warning,
+                    }],
+                }],
+                ..Default::default()
+            };
 
-            ctx.emit(&file, diag);
+            ctx.emit(snip);
         }
     }
 }

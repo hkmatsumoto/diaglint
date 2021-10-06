@@ -1,8 +1,8 @@
-use codespan_reporting::{diagnostic::Diagnostic, files::Files};
+use annotate_snippets::{display_list::DisplayList, snippet::Snippet};
 use serde_json;
 
+use crate::json;
 use crate::rules::{Rule, RuleStore};
-use crate::{json, report::ReportManager};
 
 #[derive(Default)]
 pub struct LintRunner {
@@ -23,7 +23,7 @@ impl<'a> LintRunner {
         self
     }
 
-    pub fn unregister_rules(&'a mut self, rules: &Vec<String>) -> &'a mut LintRunner {
+    pub fn unregister_rules(&'a mut self, rules: &[String]) -> &'a mut LintRunner {
         self.rule_store.unregister_rules(rules);
         self
     }
@@ -48,14 +48,12 @@ impl<'a> LintRunner {
 
 #[derive(Debug, Default)]
 pub struct LintCtx {
-    pub diags: Vec<Diagnostic<()>>,
     pub outputs: Vec<String>,
-    report_manager: ReportManager,
 }
 
 impl LintCtx {
-    pub fn emit<'f>(&mut self, files: &'f impl Files<'f, FileId = ()>, diag: Diagnostic<()>) {
-        let output = self.report_manager.emit(files, &diag);
-        self.outputs.push(output);
+    pub fn emit(&mut self, snip: Snippet<'_>) {
+        let dl = DisplayList::from(snip);
+        self.outputs.push(format!("{}", dl));
     }
 }
