@@ -1,4 +1,7 @@
 use annotate_snippets::snippet::{Annotation, AnnotationType, Slice, Snippet, SourceAnnotation};
+use nom::Finish;
+
+use crate::parse::parse_message;
 
 pub(crate) struct CapitalizedMessages {}
 
@@ -8,6 +11,11 @@ impl super::Rule for CapitalizedMessages {
     }
 
     fn check(&self, diag: &crate::json::Diagnostic, ctx: &mut crate::lint::LintCtx) {
+        let sentences = parse_message(&diag.message).finish().unwrap().1;
+        if sentences.len() > 1 {
+            return;
+        }
+
         if diag.message.starts_with(|c: char| c.is_ascii_uppercase()) {
             let snip = Snippet {
                 title: Some(Annotation {
