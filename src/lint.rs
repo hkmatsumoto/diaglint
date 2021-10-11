@@ -1,4 +1,7 @@
-use annotate_snippets::{display_list::DisplayList, snippet::Snippet};
+use annotate_snippets::{
+    display_list::DisplayList,
+    snippet::{Annotation, AnnotationType, Snippet},
+};
 use serde_json;
 
 use crate::json;
@@ -52,7 +55,18 @@ pub struct LintCtx {
 }
 
 impl LintCtx {
-    pub fn emit(&mut self, snip: Snippet<'_>) {
+    pub fn emit(&mut self, snip: Snippet<'_>, lint_name: &str) {
+        let mut snip = snip;
+        let label = format!(
+            "to disable this lint, add `ignored-diaglints: {}` to top of the test file",
+            lint_name
+        );
+        snip.footer.push(Annotation {
+            id: None,
+            label: Some(&label),
+            annotation_type: AnnotationType::Help,
+        });
+
         let dl = DisplayList::from(snip);
         self.outputs.push(format!("{}", dl));
     }

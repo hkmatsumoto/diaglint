@@ -23,7 +23,13 @@ impl super::Rule for CapitalizedMessages {
                     id: None,
                     annotation_type: AnnotationType::Warning,
                 }),
-                footer: vec![],
+                footer: vec![
+                    Annotation {
+                        id: None,
+                        label: Some("for more information, see <https://rustc-dev-guide.rust-lang.org/diagnostics.html#diagnostic-output-style-guide>"),
+                        annotation_type: AnnotationType::Note,
+                    }
+                ],
                 slices: vec![Slice {
                     source: diag.message.as_str(),
                     line_start: 1,
@@ -38,7 +44,7 @@ impl super::Rule for CapitalizedMessages {
                 ..Default::default()
             };
 
-            ctx.emit(snip);
+            ctx.emit(snip, self.name());
         }
     }
 }
